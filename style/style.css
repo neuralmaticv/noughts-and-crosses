@@ -1,109 +1,184 @@
-*, *::after, *::before {
-    box-sizing: border-box;
-    overflow: hidden;
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  overflow: hidden;
 }
+
 :root {
-    --cell-size: 100px;
-    --mark-size: calc(var(--cell-size) * .9);
+  --cell-size: 100px;
+  --mark-size: calc(var(--cell-size) * 0.9);
+
+  --clr-light: #ffffff;
+  --clr-blue: #17558f;
+  --clr-red: #be2139;
+  --clr-light-gray: #363c48;
+  --clr-gray: #282c35;
 }
+
 body {
-    margin: 0;
-    background-color: #282c35;
+  margin: 0;
+  background-color: var(--clr-gray);
 }
-.result {
-    margin-top: 150px;
-    color: white;
-    font-size: 2.3em;
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
+
+.game {
+  width: 70vw;
+  height: 100vh;
+  float: left;
 }
-.result #text {
-    margin-left: 25px;
-}
-.result button {
-    cursor: pointer;
-    width: 80px;
-    height: 35px;
-    color: #fff;
-    background-color: #bf2139;
-    border: none;
-    border-radius: 5px;
-    text-transform: uppercase;
-}
-.result #human {
-    color: rgb(23, 85, 143);
-}
-.result #aiPlayer {
-    color: #bf2139;
-}
+
+/*
+ * >>>>> GAME BOARD <<<<<
+ */
 .board {
-    position: relative;
-    width: 100vw;
-    height: 50vh;
-    display: grid;
-    justify-content: center;
-    align-content: center;
-    justify-items: center;
-    align-items: center;
-    grid-template-columns: repeat(3, auto);
+  position: relative;
+  width: 100%;
+  height: 350px;
+  margin: 0 auto;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(3, auto);
 }
 .cell {
-    width: var(--cell-size);
-    height: var(--cell-size);
-    background-color: #363c48;
-    border: 1px solid #bf2139;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 50px;
-    color:  #fff;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background-color: var(--clr-light-gray);
+  border: 1px solid var(--clr-red);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 50px;
+  color: var(--clr-light);
 }
 .cell:first-child,
 .cell:nth-child(2),
 .cell:nth-child(3) {
-    border-top: none;
+  border-top: none;
 }
 .cell:last-child,
 .cell:nth-child(7),
 .cell:nth-child(8) {
-    border-bottom: none;
+  border-bottom: none;
 }
 .cell:nth-child(3n + 1) {
-    border-left: none;
+  border-left: none;
 }
 .cell:nth-child(3n + 3) {
-    border-right: none;
+  border-right: none;
 }
-.endgame {
-    display: none;
-    position: absolute;
-    width: 200px;
-    top: 400px;
-    background-color: rgba(255, 255, 255, 0.8);
-    left: 50%;
-    margin-left: -100px;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    text-align: center;
-    color: #282c35;
-    font-size: 2em;
-    font-family: Arial, Helvetica, sans-serif;
-    border-radius: 10px;
-    z-index: 9999;
+
+
+
+/*
+ * >>>>> SUBMIT FORM <<<<<
+ */
+.form {
+  display:none;
+  position: relative;
+  margin: 0 auto;
+  width: 300px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  font-size: 2em;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 10px;
+  z-index: 9999;
+  margin-top: 15px;
 }
-.endgame button {
-    cursor: pointer;
-    width: 80px;
-    height: 35px;
-    color: #fff;
-    background-color: #bf2139;
-    border: none;
-    border-radius: 5px;
-    text-transform: uppercase;
+.form p {
+  width: 100%;
+  font-size: 16px;
+}
+.form-group {
+  position: absolute;
+  width: 60%;
+  padding: 10px 5px;
+  float: left;
+  top: 30px;
+}
+.form-field {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  border-bottom: 1px solid var(--clr-gray);
+  font-size: 16px;
+}
+.form-field::placeholder {
+  color: transparent;
+}
+.form-field:placeholder-shown ~ .form-label {
+  font-size: 16px;
+  top: 20px;
+}
+label,
+.form-field:focus ~ .form-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  color: var(--clr-gray);
+  transition: 0.3s;
+  font-size: 12px;
+}
+.submit {
+  position: absolute;
+  width: 30%;
+  float: right;
+  top: 45px;
+  right: 15px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  color: var(--clr-light);
+  background-color: var(--clr-red);
+  text-transform: uppercase;
+  cursor: pointer;
 }
 button:hover {
-    background-color: #bf2139be;
-    transition: 0.2s ease-in;
+  background-color: #be2139c7;;
+  transition: 0.2s ease-in;
+}
+
+
+
+/*
+ * >>>>> RESTART BUTTON <<<<<
+ */
+.restart {
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  width: calc(100px + 1vw);
+  height: 35px;
+  color: var(--clr-light);
+  background-color: var(--clr-red);
+  border: none;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+
+
+/*
+ * >>>>> SIDEBAR <<<<<
+ */
+.sidebar-results {
+  width: 30vw;
+  height: 100vh;
+  float: right;
+  background-color: var(--clr-red);
+}
+.sidebar-header {
+  padding: 0 0 0 5px;
+}
+.header-title {
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--clr-light);
 }
