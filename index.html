@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/style.css">
-    <title>Xs and Os Game</title>
-</head>
-<body>
 
-    <div class="result">
-        <div id="text"> 
-            Player [ X ]: <span id="human">0</span> - <span id="aiPlayer">0</span> :[ O ] AI Player
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style/style.css" />
+  <title>Xs and Os Game</title>
+</head>
+
+<body>
+  <div class="game">
+
+      <form action="#" class="form">
+        <p class="text"></p>
+        <div class="form-group">
+          <input type="text" id="username" name="username" class="form-field" placeholder="Your Name" />
+          <label for="username" class="form-label">Your Name</label>
+          <p id="form-msg"></p>
         </div>
-        <div>
-            <button onClick="restartGame()">Restart</button>
-        </div>
-    </div>
-    <div class="endgame">
-        <div class="text">Test</div>
-        <button onClick="startGame()">Continue</button>
-    </div>
+        <button class="submit" type="submit">Submit</button>
+      </form>
 
     <div class="board">
-        <div class="cell" id="0"></div>
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-        <div class="cell" id="6"></div>
-        <div class="cell" id="7"></div>
-        <div class="cell" id="8"></div>
+      <div class="cell" id="0"></div>
+      <div class="cell" id="1"></div>
+      <div class="cell" id="2"></div>
+      <div class="cell" id="3"></div>
+      <div class="cell" id="4"></div>
+      <div class="cell" id="5"></div>
+      <div class="cell" id="6"></div>
+      <div class="cell" id="7"></div>
+      <div class="cell" id="8"></div>
+    </div>
+    <button class="restart" onClick="restartGame()">Restart Game</button>
+
+  </div>
+
+  <aside class="sidebar-results">
+    <div class="sidebar-header">
+      <h1 class="header-title">Winners:</h1>
+    </div>
+    
+    <div class="sidebar-results">
+      <nav class="sidebar-list">
+        
+      </nav>
     </div>
 
-    <script src="script/app.js"></script>
+  </aside>
+
+  <script src="script/app.js"></script>
 </body>
+
 </html>

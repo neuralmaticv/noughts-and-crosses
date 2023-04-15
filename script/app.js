@@ -1,10 +1,10 @@
 let originalBoard;
-let humanWins = 0, aiWins = 0;
+let numOfMoves = 0;
+let winnerSymbol;
 const humanPlayer = 'X';
 const aiPlayer = 'O';
-const humanResult = document.getElementById("human");
-const aiResult = document.getElementById("aiPlayer");
 const cells = document.querySelectorAll(".cell");
+const sidebarList = document.querySelector('.sidebar-list');
 const winCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -21,7 +21,8 @@ startGame();
 
 
 function startGame() {
-    document.querySelector(".endgame").style.display = "none";
+    numOfMoves = 0;
+    document.querySelector(".form").style.display = "none";
     originalBoard = Array.from(Array(9).keys());
 
     for (let i = 0; i < cells.length; i++) {
@@ -30,13 +31,13 @@ function startGame() {
         cells[i].addEventListener("click", turnClick, false);
     }
 }
+
 
 function restartGame() {
     humanWins = 0;
     aiWins = 0;
-    humanResult.innerHTML = "" + humanWins;
-    aiResult.innerHTML = "" + aiWins;
-    document.querySelector(".endgame").style.display = "none";
+    numOfMoves = 0;
+    document.querySelector(".form").style.display = "none";
     originalBoard = Array.from(Array(9).keys());
 
     for (let i = 0; i < cells.length; i++) {
@@ -45,6 +46,7 @@ function restartGame() {
         cells[i].addEventListener("click", turnClick, false);
     }
 }
+
 
 function turnClick(square) {
     if (typeof originalBoard[square.target.id] == "number") {
@@ -53,12 +55,15 @@ function turnClick(square) {
     }
 }
 
+
 function turn(squareId, player) {
     originalBoard[squareId] = player;
     document.getElementById(squareId).innerText = player;
     let gameWon = checkWin(originalBoard, player);
+    numOfMoves++;
     if (gameWon) gameOver(gameWon);
 }
+
 
 function checkWin(board, player) {
     let gameWon = null;
@@ -73,6 +78,7 @@ function checkWin(board, player) {
     return gameWon;
 }
 
+
 function gameOver(gameWon) {
     for (let index of winCombinations[gameWon.index]) {
         document.getElementById(index).style.backgroundColor = gameWon.player == humanPlayer ? "rgba(43, 147, 72, .5)" : "rgba(214, 40, 40, .5)";
@@ -84,28 +90,72 @@ function gameOver(gameWon) {
 
 
     if (gameWon.player === humanPlayer) {
-        declareWinner("You win!");
-        humanWins++;
-        humanResult.innerHTML = "" + humanWins;
+        declareWinner("Player " + humanPlayer + " has won in " + numOfMoves + " moves.");
+        winnerSymbol = humanPlayer;
     } else if (gameWon.player === aiPlayer) {
-        declareWinner("You lose!");
-        aiWins++;
-        aiResult.innerHTML = "" + aiWins;
+        declareWinner("Player " + aiPlayer + " has won in " + numOfMoves + " moves.");
+        winnerSymbol = aiPlayer;
     }
 }
 
+
 function declareWinner(msg) {
-    document.querySelector(".endgame").style.display = "block";
-    document.querySelector(".endgame .text").innerText = msg;
+    document.querySelector(".form").style.display = "block";
+    document.querySelector(".form .text").innerText = msg;
 }
+
+
+function getWinner() {
+    const username = document.getElementById("username").value;
+
+    const winnersFromStorage = JSON.parse(localStorage.getItem('winners'));
+    let winners = [];
+
+    if (winnersFromStorage) {
+        winnersFromStorage.forEach((winner) => {
+            winners.push(winner);
+        });
+    }
+
+    const winner = {
+        username: username,
+        symbol: winnerSymbol,
+        numOfMoves: numOfMoves,
+    };
+
+    winners.push(winner);
+    localStorage.setItem("winners", JSON.stringify(winners));
+}
+
+
+function appendWinnerToSidebar(username, symbol, numOfMoves) {
+    sidebarList.insertAdjacentHTML(
+        'beforeend',
+        `<div class="sidebar-list-item">
+            Winner: ${username}, Symbol: ${symbol}, Moves: ${numOfMoves}
+            <hr>
+        </div>`
+    );
+};
+
+
+function showWinnersInSidebar() {
+    const winners = JSON.parse(localStorage.getItem('winners'));
+
+    if (winners) {
+        winners.forEach((winner) => {
+            const { username, symbol, numOfMoves } = winner;
+
+            appendWinnerToSidebar(username, symbol, numOfMoves);
+        });
+    }
+};
+
 
 function emptySquares() {
     return originalBoard.filter((elem, i) => i === elem);
 }
 
-function bestSpot() {
-    return minmax(originalBoard, aiPlayer).index;
-}
 
 function checkTie() {
     if (emptySquares().length == 0) {
@@ -113,11 +163,20 @@ function checkTie() {
             cell.style.backgroundColor = "rgba(20, 33, 61, .5)";
             cell.removeEventListener("click", turnClick, false);
         }
-        declareWinner("Draw");
+        document.querySelector(".form").style.display = "block";
+        document.querySelector(".form .text").innerText = "Game ended in a draw!";
+        document.querySelector(".form .form-group").style.display = "none";
+        document.querySelector(".form .submit").style.display = "none";
         return true;
     }
     return false;
 }
+
+
+function bestSpot() {
+    return minmax(originalBoard, aiPlayer).index;
+}
+
 
 function minmax(newBoard, player) {
     let availableSpots = emptySquares(newBoard);
@@ -170,3 +229,6 @@ function minmax(newBoard, player) {
     }
     return moves[bestMove];
 }
+
+document.querySelector('.form').addEventListener('submit', getWinner);
+showWinnersInSidebar();
